@@ -10,7 +10,26 @@ export default function initDropdownMenu() {
   function handleClick(event) {
     event.preventDefault();
     this.classList.toggle("active");
-  };
+    outsideClick(this, () => {
+      this.classList.remove("active");
+    });
+  }
 
-  
+  function outsideClick(element, callback) {
+    const html = document.documentElement;
+    const outside = 'data-outside';
+
+    if(!element.hasAttribute(outside)){
+        html.addEventListener("click", handleOutSideClick);
+        element.setAttribute(outside, '');
+    }
+    
+    function handleOutSideClick(event) {
+      if (!element.contains(event.target)) {
+        element.removeAttribute(outside);
+        html.removeEventListener('click', handleOutsideClick)
+        callback();
+      }
+    }
+  }
 }
